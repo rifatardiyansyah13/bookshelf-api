@@ -89,4 +89,29 @@ const getAllBooks = () => {
   };
 };
 
-module.exports = { addBooks, getAllBooks };
+// Function for get books by ID
+const getBooksById = (request, h) => {
+  // Get params
+  const { id } = request.params;
+
+  // filter book by ID
+  const book = books.filter((b) => b.id === id)[0];
+
+  if (book !== undefined) {
+    return {
+      status: 'success',
+      data: {
+        book,
+      },
+    };
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+module.exports = { addBooks, getAllBooks, getBooksById };
