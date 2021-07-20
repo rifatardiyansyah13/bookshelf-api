@@ -1,6 +1,8 @@
 const { nanoid } = require('nanoid');
+const _ = require('lodash');
 const books = require('./book');
 
+// Function for addBooks
 const addBooks = (request, h) => {
   // Request payload add books
   const {
@@ -75,4 +77,16 @@ const addBooks = (request, h) => {
   return response;
 };
 
-module.exports = { addBooks };
+// Function for get list all books
+const getAllBooks = () => {
+  // New books objects for response body
+  const showBooks = _.map(books, (e) => _.pick(e, ['id', 'name', 'publisher']));
+  return {
+    status: 'success',
+    data: {
+      books: showBooks,
+    },
+  };
+};
+
+module.exports = { addBooks, getAllBooks };
