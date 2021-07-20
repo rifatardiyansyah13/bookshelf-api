@@ -89,7 +89,7 @@ const getAllBooks = () => {
   };
 };
 
-// Function for get books by ID
+// Function for get book by ID
 const getBooksById = (request, h) => {
   // Get params
   const { id } = request.params;
@@ -114,7 +114,7 @@ const getBooksById = (request, h) => {
   return response;
 };
 
-// Function for update books by Id
+// Function for update book by Id
 const updateBookById = (request, h) => {
   const { id } = request.params;
   const {
@@ -177,6 +177,30 @@ const updateBookById = (request, h) => {
   return response;
 };
 
+// Function for delete book by Id
+const deleteBookById = (request, h) => {
+  const { id } = request.params;
+
+  const index = books.findIndex((book) => book.id === id);
+
+  if (index !== -1) {
+    books.splice(index, 1);
+    const response = h.response({
+      status: 'success',
+      message: 'Buku berhasil dihapus',
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku gagal dihapus. Id tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
 module.exports = {
-  addBooks, getAllBooks, getBooksById, updateBookById,
+  addBooks, getAllBooks, getBooksById, updateBookById, deleteBookById,
 };
