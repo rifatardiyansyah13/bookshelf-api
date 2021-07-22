@@ -77,16 +77,42 @@ const addBooks = (request, h) => {
   return response;
 };
 
-// Function for get list all books
-const getAllBooks = () => {
-  // New books objects for response body
-  const showBooks = _.map(books, (e) => _.pick(e, ['id', 'name', 'publisher']));
-  return {
+// Function for get books (All books or by query)
+const getBooks = (request, h) => {
+  const { query } = request;
+
+  // Jika tidak ada query paramater, maka menampilkan semua buku
+  if (_.isEmpty(query)) {
+    const showBooks = _.map(books, (e) => _.pick(e, ['id', 'name', 'publisher']));
+    return {
+      status: 'success',
+      data: {
+        books: showBooks,
+      },
+    };
+  }
+
+  // Jika params reading dikirimkan, maka lakukan parse ke boolean
+  if (query.reading) {
+    const parseReading = query.reading === '1';
+    query.reading = parseReading;
+  }
+
+  // Jika params finished dikirimkan, maka lakukan parse ke boolean
+  if (query.finished) {
+    const parseFinished = query.finished === '1';
+    query.finished = parseFinished;
+  }
+
+  const showBooks = _.map((_.filter(books, query)), (e) => _.pick(e, ['id', 'name', 'publisher']));
+  const response = h.response({
     status: 'success',
     data: {
       books: showBooks,
     },
-  };
+  });
+  response.code(200);
+  return response;
 };
 
 // Function for get book by ID
@@ -202,5 +228,5 @@ const deleteBookById = (request, h) => {
 };
 
 module.exports = {
-  addBooks, getAllBooks, getBooksById, updateBookById, deleteBookById,
+  addBooks, getBooksById, updateBookById, deleteBookById, getBooks,
 };
